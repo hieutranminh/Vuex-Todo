@@ -54,12 +54,17 @@ export default {
   },
   methods: {
     scrollLoadMore () {
-      // JQUERY SCROLL
-      // $('.scrollbar').scrollTop() === $('.scrollbar').prop('scrollHeight') - $('.scrollbar').height()
-      let divScrollBar = document.querySelector('.scrollbar')
-
-      divScrollBar.addEventListener('scroll', function () {
-        console.log(divScrollBar.scrollTop)
+      /* JQUERY & JAVASCRIPT SCROLL
+      JQUERY SCROLL------------------
+      $('.scrollbar').scrollTop() === $('.scrollbar').prop('scrollHeight') - $('.scrollbar').height()
+      JAVASCRIPT SCROLL--------------
+      Math.ceil(divScrollBar.scrollTop) === divScrollBar.scrollHeight - divScrollBar.offsetHeight
+      */
+      let elementScrollBar = document.querySelector('.scrollbar')
+      elementScrollBar.addEventListener('scroll', function () {
+        if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight) {
+          console.log('Dung JS duoc roi')
+        }
       })
     }
   }
