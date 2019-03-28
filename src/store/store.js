@@ -27,7 +27,7 @@ export const store = new Vuex.Store({
   },
   mutations: {
     SET_DATA_TODO: function (state, data) {
-      state.dataTodo = data
+      state.dataTodo = [...state.dataTodo, ...data]
     },
     SET_ADD_DATA: function (state, data) {
       state.dataTodo.unshift({
@@ -44,6 +44,16 @@ export const store = new Vuex.Store({
       let index = state.dataTodo.findIndex(item => item.id === data)
       state.dataTodo.splice(index, 1)
     },
+    SET_REMOVE_ALL_DATA: function (state) {
+      state.dataTodo = state.dataTodo.filter(item => !item.status)
+      if (state.dataTodo.length === 0) state.checkAll = false
+    },
+    SET_FILTER_DATA: function (state, data) {
+      if (data === 'all') state.filterCate = 'all'
+      else if (data === 'active') state.filterCate = 'active'
+      else if (data === 'done') state.filterCate = 'done'
+      else state.filterCate = 'all'
+    },
     SET_CHECK_DATA: function (state, data) {
       let index = state.dataTodo.findIndex(item => item.id === data)
       state.dataTodo[index].status = !state.dataTodo[index].status
@@ -59,12 +69,6 @@ export const store = new Vuex.Store({
         state.checkAll = false
       }
     },
-    SET_FILTER_DATA: function (state, data) {
-      if (data === 'all') state.filterCate = 'all'
-      else if (data === 'active') state.filterCate = 'active'
-      else if (data === 'done') state.filterCate = 'done'
-      else state.filterCate = 'all'
-    },
     SET_CHECK_ALL_DATA: function (state, data) {
       state.checkAll = data
       state.dataTodo.forEach(item => {
@@ -78,9 +82,14 @@ export const store = new Vuex.Store({
         }
       })
     },
-    SET_REMOVE_ALL_DATA: function (state) {
-      state.dataTodo = state.dataTodo.filter(item => !item.status)
-      if (state.dataTodo.length === 0) state.checkAll = false
+    SET_REMOVE_EXIST_SCROLL: function (state, data) {
+      for (let i = 0; i < state.dataTodo.length; i++) {
+        for (let j = 0; j < data.length; j++) {
+          if (state.dataTodo[i].id === data[j].id) {
+            data.splice(j, 1)
+          }
+        }
+      }
     }
   },
   actions: {
@@ -104,16 +113,6 @@ export const store = new Vuex.Store({
         })
       })
     },
-    DELETE_DATA_TODO: function (context, id) {
-      return new Promise(function (resolve, reject) {
-        axios.delete(`https://todoapp-express-api.herokuapp.com/api/v1/todos/${id}`).then((res) => {
-          resolve(res)
-          context.commit('SET_DELETE_DATA', id)
-        }).catch((err) => {
-          console.log(err)
-        })
-      })
-    },
     EDIT_DATA_TODO: function (context, newEdit) {
       return new Promise(function (resolve, reject) {
         axios.put(`https://todoapp-express-api.herokuapp.com/api/v1/todos/${newEdit.id}`,
@@ -124,6 +123,16 @@ export const store = new Vuex.Store({
           }).catch((err) => {
             console.log(err)
           })
+      })
+    },
+    DELETE_DATA_TODO: function (context, id) {
+      return new Promise(function (resolve, reject) {
+        axios.delete(`https://todoapp-express-api.herokuapp.com/api/v1/todos/${id}`).then((res) => {
+          resolve(res)
+          context.commit('SET_DELETE_DATA', id)
+        }).catch((err) => {
+          console.log(err)
+        })
       })
     },
     REMOVE_MORE_DATA_TODO: function (context) {

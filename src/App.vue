@@ -35,11 +35,14 @@ import FilterCategory from './components/FilterCategory.vue'
 import AddTodo from './components/AddTodo.vue'
 
 // import $ from 'jquery'
+import axios from 'axios'
+var _ = require('lodash')
 
 export default {
   data () {
     return {
-      numberNextPage: null
+      nextPage: null,
+      isContinueCall: false
     }
   },
   components: {
@@ -48,8 +51,13 @@ export default {
     FilterCategory,
     AddTodo
   },
+  beforeMount () {
+    let self = this
+    this.$store.dispatch('GET_DATA_TODO').then(function (res) {
+      self.nextPage = res.data.nextPage
+    })
+  },
   mounted () {
-    this.$store.dispatch('GET_DATA_TODO')
     this.scrollLoadMore()
   },
   methods: {
@@ -60,10 +68,29 @@ export default {
       JAVASCRIPT SCROLL--------------
       Math.ceil(divScrollBar.scrollTop) === divScrollBar.scrollHeight - divScrollBar.offsetHeight
       */
+      let self = this
       let elementScrollBar = document.querySelector('.scrollbar')
       elementScrollBar.addEventListener('scroll', function () {
-        if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight) {
-          console.log('Dung JS duoc roi')
+        if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight && self.nextPage) {
+          _.debounce(async function () {
+            do {
+              console.log('loop')
+              await axios.get(`https://todoapp-express-api.herokuapp.com/api/v1/todos?page=${self.nextPage}`)
+                .then(function (res) {
+                  self.$store.commit('SET_REMOVE_EXIST_SCROLL', res.data.data)
+                  if (res.data.data.length !== 0) {
+                    // co it nhat mot cai moi
+                    self.isContinueCall = false
+                  } else {
+                    // do data co length = 0  nen goij axios tiep
+                    self.isContinueCall = true
+                  }
+                  console.log('page', res.data.nextPage)
+                  self.nextPage = res.data.nextPage
+                  self.$store.commit('SET_DATA_TODO', res.data.data)
+                })
+            } while (self.nextPage && self.isContinueCall)
+          }, 500)()
         }
       })
     }
@@ -163,8 +190,8 @@ export default {
   }
   .item-todo li .delete {
     float: right;
-    background: orange;
-    color: black;
+    background: #70adff;
+    color: white;
     padding: 2px 10px;
     cursor: pointer;
     transition: 0.2s;
@@ -175,8 +202,8 @@ export default {
   }
   .item-todo li .edit {
     float: right;
-    background: greenyellow;
-    color: black;
+    background: #b19aff;
+    color: white;
     padding: 2px 10px;
     cursor: pointer;
     transition: 0.2s;
