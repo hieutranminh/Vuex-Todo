@@ -20,6 +20,8 @@
           :todoProps="todo"
         ></ItemTodo>
       </div>
+      <!--Loading more animation-->
+      <li v-if="iconLoading" class="spinner"><i class="fas fa-spinner fa-spin"></i></li>
       <!--Checkbox Select All & RemoveAll-->
       <selected-all></selected-all>
     </ul>
@@ -42,7 +44,8 @@ export default {
   data () {
     return {
       nextPage: null,
-      isContinueCall: false
+      isContinueCall: false,
+      iconLoading: false
     }
   },
   components: {
@@ -72,9 +75,9 @@ export default {
       let elementScrollBar = document.querySelector('.scrollbar')
       elementScrollBar.addEventListener('scroll', function () {
         if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight && self.nextPage) {
+          self.iconLoading = true
           _.debounce(async function () {
             do {
-              console.log('loop')
               await axios.get(`https://todoapp-express-api.herokuapp.com/api/v1/todos?page=${self.nextPage}`)
                 .then(function (res) {
                   self.$store.commit('SET_REMOVE_EXIST_SCROLL', res.data.data)
@@ -85,12 +88,12 @@ export default {
                     // do data co length = 0  nen goij axios tiep
                     self.isContinueCall = true
                   }
-                  console.log('page', res.data.nextPage)
                   self.nextPage = res.data.nextPage
                   self.$store.commit('SET_DATA_TODO', res.data.data)
+                  self.iconLoading = false
                 })
             } while (self.nextPage && self.isContinueCall)
-          }, 500)()
+          }, 1000)()
         }
       })
     }
@@ -113,9 +116,17 @@ export default {
   /*}*/
   /*.my-style .notification-content {*/
   /*}*/
+  .item-todo li.spinner {
+    text-align: center;
+    font-size: 20px;
+    background: transparent;
+    color: dodgerblue;
+    padding: 5px 0px;
+  }
   .scrollbar {
     overflow-y: scroll;
     height: 200px;
+    perspective: 800px;
   }
   .footer-todo {
     margin-top: 10px;
@@ -182,6 +193,7 @@ export default {
     padding: 10px 5px;
     font-weight: 100;
     background-color: rgba(0, 191, 255, 0.11);
+    transform-origin: 50% 0%;
   }
   .item-todo li.done {
     text-decoration: line-through;

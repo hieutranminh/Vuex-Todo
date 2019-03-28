@@ -1,4 +1,5 @@
 <template>
+  <transition name="itemTodo" >
     <div>
       <li v-if="statusEdit" :class="{ done: todoProps.status }">
         <input
@@ -29,6 +30,7 @@
         </button>
       </li>
     </div>
+  </transition>
 </template>
 
 <script>
@@ -68,3 +70,45 @@ export default {
   }
 }
 </script>
+<style scoped>
+  .itemTodo-enter{
+  }
+  .itemTodo-enter-active{
+    transform-origin: 50% 0%;
+    animation: slide-in 1s ease-out forwards;
+  }
+  /*leave*/
+  .itemTodo-leave{}
+  .itemTodo-leave-active{
+    transform-origin: 50% 0%;
+    animation: slide-out 1s ease-out forwards;
+  }
+  /*keyframe*/
+  @keyframes slide-in {
+    0% {
+      transform:scale(1) rotateX(90deg);
+      opacity: 0;
+    }
+    70% {
+      transform:scale(0.9) rotateX(0deg);
+    }
+    100% {
+      transform:scale(1) rotateX(0deg);
+      opacity: 1;
+    }
+  }
+  @keyframes slide-out {
+    0% {
+      transform:scale(1) rotateX(0deg);
+      opacity: 0;
+    }
+    50% {
+      transform:scale(0.9) rotateX(0deg);
+      opacity: 1;
+    }
+    100% {
+      transform:scale(0.9) rotateX(90deg);
+      opacity: 0;
+    }
+  }
+</style>
