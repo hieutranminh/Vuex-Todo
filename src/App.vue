@@ -55,10 +55,7 @@ export default {
     AddTodo
   },
   beforeMount () {
-    let self = this
-    this.$store.dispatch('GET_DATA_TODO').then(function (res) {
-      self.nextPage = res.data.nextPage
-    })
+    this.$store.dispatch('GET_DATA_TODO')
   },
   mounted () {
     this.scrollLoadMore()
@@ -74,11 +71,11 @@ export default {
       let self = this
       let elementScrollBar = document.querySelector('.scrollbar')
       elementScrollBar.addEventListener('scroll', function () {
-        if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight && self.nextPage) {
+        if (Math.ceil(elementScrollBar.scrollTop) === elementScrollBar.scrollHeight - elementScrollBar.offsetHeight && self.$store.state.nextPage) {
           self.iconLoading = true
           _.debounce(async function () {
             do {
-              await axios.get(`https://todoapp-express-api.herokuapp.com/api/v1/todos?page=${self.nextPage}`)
+              await axios.get(`https://todoapp-express-api.herokuapp.com/api/v1/todos?page=${self.$store.state.nextPage}`)
                 .then(function (res) {
                   self.$store.commit('SET_REMOVE_EXIST_SCROLL', res.data.data)
                   if (res.data.data.length !== 0) {
@@ -88,11 +85,11 @@ export default {
                     // do data co length = 0  nen goij axios tiep
                     self.isContinueCall = true
                   }
-                  self.nextPage = res.data.nextPage
+                  self.$store.commit('SET_NEXT_PAGE', res)
                   self.$store.commit('SET_DATA_TODO', res.data.data)
                   self.iconLoading = false
                 })
-            } while (self.nextPage && self.isContinueCall)
+            } while (self.$store.state.nextPage && self.isContinueCall)
           }, 1000)()
         }
       })

@@ -31,7 +31,7 @@ export default {
       this.$store.dispatch('REMOVE_MORE_DATA_TODO').then(function (res) {
         self.MIXIN_Notifycation('Notify', 'error', 'Remove select all success')
         self.$store.dispatch('GET_DATA_TODO').then(function () {
-          console.log('okkkkkkkkkkkkkk')
+          self.$store.commit('SET_NEXT_PAGE', res)
         })
       })
     }

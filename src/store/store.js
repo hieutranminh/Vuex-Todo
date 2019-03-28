@@ -9,6 +9,7 @@ export const store = new Vuex.Store({
     dataTodo: [],
     filterCate: 'all',
     checkAll: false,
+    nextPage: null,
     dataCheck: [],
     dataCheckId: []
   },
@@ -90,6 +91,9 @@ export const store = new Vuex.Store({
           }
         }
       }
+    },
+    SET_NEXT_PAGE: function (state, res) {
+      state.nextPage = res.data.nextPage
     }
   },
   actions: {
@@ -98,6 +102,7 @@ export const store = new Vuex.Store({
         axios.get('https://todoapp-express-api.herokuapp.com/api/v1/todos').then((res) => {
           resolve(res)
           context.commit('SET_DATA_TODO', res.data.data)
+          context.commit('SET_NEXT_PAGE', res)
         }).catch((err) => {
           console.log(err)
         })

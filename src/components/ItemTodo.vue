@@ -71,17 +71,17 @@ export default {
 }
 </script>
 <style scoped>
-  .itemTodo-enter{
+  .itemTodo-enter {
   }
   .itemTodo-enter-active{
     transform-origin: 50% 0%;
-    animation: slide-in 1s ease-out forwards;
+    animation: slide-in 0.5s ease-out forwards;
   }
   /*leave*/
   .itemTodo-leave{}
   .itemTodo-leave-active{
     transform-origin: 50% 0%;
-    animation: slide-out 1s ease-out forwards;
+    animation: slide-out 0.5s ease-out forwards;
   }
   /*keyframe*/
   @keyframes slide-in {
