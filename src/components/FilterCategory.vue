@@ -22,7 +22,9 @@
 export default {
   methods: {
     filterCate (cate) {
+      this.$router.push({ path: '/', query: { filter: cate } })
       this.$store.commit('SET_FILTER_DATA', cate)
+      console.log('filter query url---', this.$route)
     }
   }
 }

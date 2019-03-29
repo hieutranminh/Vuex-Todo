@@ -28,12 +28,13 @@ export default {
   methods: {
     removeTodoSelected () {
       let self = this
-      this.$store.dispatch('REMOVE_MORE_DATA_TODO').then(function (res) {
-        self.MIXIN_Notifycation('Notify', 'error', 'Remove select all success')
-        self.$store.dispatch('GET_DATA_TODO').then(function () {
-          self.$store.commit('SET_NEXT_PAGE', res)
+      if (this.$store.state.checkAll) {
+        this.$store.dispatch('REMOVE_MORE_DATA_TODO').then(function (res) {
+          self.MIXIN_Notifycation('Notify', 'error', 'Remove select all success')
+          self.$store.dispatch('GET_DATA_TODO').then(function () {
+          })
         })
-      })
+      }
     }
   }
 }

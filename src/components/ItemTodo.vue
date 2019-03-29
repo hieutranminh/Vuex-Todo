@@ -71,14 +71,27 @@ export default {
 }
 </script>
 <style scoped>
-  .itemTodo-enter {
+  /*TRANSITION*/
+  /*.itemTodo-enter,
+  .itemTodo-leave-to {
+    opacity: 0;
+    transform: rotateY(50deg);
   }
+  .itemTodo-enter-to,
+  .itemTodo-leave {
+    opacity: 1;
+    transform: rotateY(0deg);
+  }
+  .itemTodo-enter-active,
+  .itemTodo-leave-active {
+    transition: all 1s ease-out;
+  }*/
+  /*ANIMATION*/
   .itemTodo-enter-active{
     transform-origin: 50% 0%;
     animation: slide-in 0.5s ease-out forwards;
   }
   /*leave*/
-  .itemTodo-leave{}
   .itemTodo-leave-active{
     transform-origin: 50% 0%;
     animation: slide-out 0.5s ease-out forwards;
