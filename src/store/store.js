@@ -99,7 +99,7 @@ export const store = new Vuex.Store({
   actions: {
     GET_DATA_TODO: function (context) {
       return new Promise(function (resolve, reject) {
-        axios.get('https://todoapp-express-api.herokuapp.com/api/v1/todos').then((res) => {
+        axios.get('https://api-express-and-vuejs.herokuapp.com/api/v1/todos').then((res) => {
           resolve(res)
           context.commit('SET_DATA_TODO', res.data.data)
           context.commit('SET_NEXT_PAGE', res)
@@ -110,7 +110,7 @@ export const store = new Vuex.Store({
     },
     ADD_DATA_TODO: function (context, data) {
       return new Promise(function (resolve, reject) {
-        axios.post(`https://todoapp-express-api.herokuapp.com/api/v1/todos`, {name: data}).then((res) => {
+        axios.post(`https://api-express-and-vuejs.herokuapp.com/api/v1/todos`, {name: data}).then((res) => {
           resolve(res)
           context.commit('SET_ADD_DATA', res.data.data)
         }).catch((err) => {
@@ -120,7 +120,7 @@ export const store = new Vuex.Store({
     },
     EDIT_DATA_TODO: function (context, newEdit) {
       return new Promise(function (resolve, reject) {
-        axios.put(`https://todoapp-express-api.herokuapp.com/api/v1/todos/${newEdit.id}`,
+        axios.put(`https://api-express-and-vuejs.herokuapp.com/api/v1/todos/${newEdit.id}`,
           {id: newEdit.id, name: newEdit.name, status: newEdit.status})
           .then((res) => {
             resolve(res)
@@ -132,7 +132,7 @@ export const store = new Vuex.Store({
     },
     DELETE_DATA_TODO: function (context, id) {
       return new Promise(function (resolve, reject) {
-        axios.delete(`https://todoapp-express-api.herokuapp.com/api/v1/todos/${id}`).then((res) => {
+        axios.delete(`https://api-express-and-vuejs.herokuapp.com/api/v1/todos/${id}`).then((res) => {
           resolve(res)
           context.commit('SET_DELETE_DATA', id)
         }).catch((err) => {
@@ -144,7 +144,7 @@ export const store = new Vuex.Store({
       return new Promise(function (resolve, reject) {
         axios({
           method: 'delete',
-          url: `https://todoapp-express-api.herokuapp.com/api/v1/todos`,
+          url: `https://api-express-and-vuejs.herokuapp.com/api/v1/todos`,
           data: {ids: context.state.dataCheckId},
           headers: {'Content-Type': 'application/json'}
         }).then(function (res) {

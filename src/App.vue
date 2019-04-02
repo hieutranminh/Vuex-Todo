@@ -75,7 +75,7 @@ export default {
           self.iconLoading = true
           _.debounce(async function () {
             do {
-              await axios.get(`https://todoapp-express-api.herokuapp.com/api/v1/todos?page=${self.$store.state.nextPage}`)
+              await axios.get(`https://api-express-and-vuejs.herokuapp.com/api/v1/todos?page=${self.$store.state.nextPage}`)
                 .then(function (res) {
                   self.$store.commit('SET_REMOVE_EXIST_SCROLL', res.data.data)
                   if (res.data.data.length !== 0) {
